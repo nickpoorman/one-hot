@@ -1,0 +1,54 @@
+# node.js #
+###########
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+
+npm-debug.log
+node_modules
+coverage
+
+# SublimeText project files #
+#############################
+*.sublime-project
+*.sublime-workspace
+
+# OSX generated files #
+######################
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# vim #
+#######
+.*.s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+# Emacs #
+#########
+.tern-port
+
+# R #
+#####
+.Rhistory
+
+# Heroku #
+##########
+.env

@@ -1,0 +1,24 @@
+{
+  "name": "one-hot",
+  "version": "1.0.0",
+  "description": "One hot encode vectors using a streaming implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/integration/*.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickpoorman/one-hot.git"
+  },
+  "author": "Nick Poorman",
+  "bugs": {
+    "url": "https://github.com/nickpoorman/one-hot/issues"
+  },
+  "homepage": "https://github.com/nickpoorman/one-hot",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "should": "^6.0.3"
+  }
+}
