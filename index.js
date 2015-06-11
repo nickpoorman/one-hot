@@ -1,1 +1,1 @@
-module.exports = require('lib/one-hot');
+module.exports = require('./lib/one-hot');
