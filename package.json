@@ -4,8 +4,7 @@
   "description": "One hot encode vectors using a streaming implementation",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/test.js",
-    "start": "node index.js"
+    "test": "mocha test/test.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +21,6 @@
   "devDependencies": {
     "mocha": "^2.2.5",
     "should": "^6.0.3"
-  }
+  },
+  "license": "MIT"
 }
