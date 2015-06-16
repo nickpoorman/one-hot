@@ -1,11 +1,17 @@
-box: zhevron/iojs@1.1.0
+box: nodesource/sid:iojs
+# Build definition
 build:
+  # The steps that will be executed on build
   steps:
+    # A step that executes `npm install` command
+    - npm-install
+    # A step that executes `npm test` command
+    - npm-test
+
+    # A custom script step, name value is used in the UI
+    # and the code value contains the command that get executed
     - script:
-        name: Use io.js 2.2.x
+        name: echo nodejs information
         code: |
-          nvm use iojs-v2.2
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
-    - npm-install
-    - npm-test
