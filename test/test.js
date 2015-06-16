@@ -33,7 +33,7 @@ describe('one hot', function() {
         for (var i = 0; i < testIVs.length; i++) {
           iv = testIVs[i];
           encodedTarget = _.clone(encodedIVs[i], true);
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndex, iv[encodeColumnIndex]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndex, iv[encodeColumnIndex]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 1;
           encodedTarget.should.eql(data[i]);
@@ -41,6 +41,122 @@ describe('one hot', function() {
 
         done();
       });
+    });
+  });
+
+  it('should properly get the encoded index from the original index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var encodedIndex = oneHot.getEncodedIndexFromOriginalIndex(3, 'a'); // encodedIndex could be 3 or 4, [1, 2, 3, 1, 0], or [1, 2, 3, 0, 1] depending on the order in which the ivs were processed
+      encodedIndex.should.be.eql(3);
+      done();
+    });
+  });
+
+  it('should properly get the original index from the encoded index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var encodedIndex = oneHot.getOriginalIndexFromEncodedIndex(4); // 3
+      encodedIndex.should.be.eql(3);
+      done();
+    });
+  });
+
+  it('should properly get the internal index from the original index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var encodedIndexA = oneHot.getInternalIndexFromOriginalIndex(3, 'a'); // 4, ie, [1, 2, 3, <encoded column: {a, b}>, 1, 0]
+      var encodedIndexB = oneHot.getInternalIndexFromOriginalIndex(3, 'b'); // 5, ie, [1, 2, 3, <encoded column: {a, b}>, 0, 1]
+      encodedIndexA.should.be.eql(4);
+      encodedIndexB.should.be.eql(5);
+      done();
+    });
+  });
+
+  it('should properly get the original index from the internal index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var encodedIndexA = oneHot.getOriginalIndexFromInternalIndex(4); // 3, ie, [1, 2, 3, <encoded column: {a, b}>, 1, 0] => [1, 2, 3, 'a']
+      var encodedIndexB = oneHot.getOriginalIndexFromInternalIndex(5); // 3, ie, [1, 2, 3, <encoded column: {a, b}>, 0, 1] => [1, 2, 3, 'b']
+      encodedIndexA.should.be.eql(3);
+      encodedIndexB.should.be.eql(3);
+      done();
+    });
+  });
+
+  it('should properly get the encoded index from the internal index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var encodedIndexA = oneHot.getEncodedIndexFromInternalIndex(4); // 3, ie, [1, 2, 3, <encoded column: {a, b}>, 1, 0] => [1, 2, 3, 1, 0]
+      var encodedIndexB = oneHot.getEncodedIndexFromInternalIndex(5); // 4, ie, [1, 2, 3, <encoded column: {a, b}>, 0, 1] => [1, 2, 3, 0, 1]
+      encodedIndexA.should.be.eql(3);
+      encodedIndexB.should.be.eql(4);
+      done();
+    });
+  });
+
+  it('should properly get the internal index from the encoded index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var encodedIndexA = oneHot.getInternalIndexFromEncodedIndex(3); // 4, ie, [1, 2, 3, 1, 0] => [1, 2, 3, <encoded column: {a, b}>, 1, 0]
+      var encodedIndexB = oneHot.getInternalIndexFromEncodedIndex(4); // 5, ie, [1, 2, 3, 0, 1] => [1, 2, 3, <encoded column: {a, b}>, 0, 1]
+      encodedIndexA.should.be.eql(4);
+      encodedIndexB.should.be.eql(5);
+      done();
     });
   });
 });
@@ -98,7 +214,7 @@ describe('one hot - streaming', function() {
         for (var i = 0; i < testIVs.length; i++) {
           iv = testIVs[i];
           encodedTarget = _.clone(encodedIVs[i], true);
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndex, iv[encodeColumnIndex]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndex, iv[encodeColumnIndex]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 1;
           encodedTarget.should.eql(data[i]);
@@ -148,10 +264,10 @@ describe('one hot - multiple features', function() {
         for (var i = 0; i < testIVs.length; i++) {
           iv = testIVs[i];
           encodedTarget = _.clone(encodedIVs[i], true);
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndexA, iv[encodeColumnIndexA]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndexA, iv[encodeColumnIndexA]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 1;
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndexB, iv[encodeColumnIndexB]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndexB, iv[encodeColumnIndexB]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 1;
           encodedTarget.should.eql(data[i]);
@@ -197,10 +313,10 @@ describe('one hot - multiple features - duplicate features', function() {
         for (var i = 0; i < testIVs.length; i++) {
           iv = testIVs[i];
           encodedTarget = _.clone(encodedIVs[i], true);
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndexA, iv[encodeColumnIndexA]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndexA, iv[encodeColumnIndexA]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 1;
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndexB, iv[encodeColumnIndexB]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndexB, iv[encodeColumnIndexB]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 1;
           encodedTarget.should.eql(data[i]);
@@ -240,10 +356,10 @@ describe('one hot - single duplicate feature, different original columns', funct
         for (var i = 0; i < testIVs.length; i++) {
           iv = testIVs[i];
           encodedTarget = _.clone(encodedIVs[i], true);
-          columnIndexA = oneHot.getEncodedColumnIndex(encodeColumnIndexA, iv[encodeColumnIndexA]);
+          columnIndexA = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndexA, iv[encodeColumnIndexA]);
           if (typeof columnIndexA === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndexA] = 1;
-          columnIndexB = oneHot.getEncodedColumnIndex(encodeColumnIndexB, iv[encodeColumnIndexB]);
+          columnIndexB = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndexB, iv[encodeColumnIndexB]);
           if (typeof columnIndexB === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndexB] = 1;
           columnIndexA.should.not.eql(columnIndexB);
@@ -288,7 +404,7 @@ describe('one cold', function() {
         for (var i = 0; i < testIVs.length; i++) {
           iv = testIVs[i];
           encodedTarget = _.clone(encodedIVs[i], true);
-          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndex, iv[encodeColumnIndex]);
+          columnIndex = oneHot.getEncodedIndexFromOriginalIndex(encodeColumnIndex, iv[encodeColumnIndex]);
           if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
           encodedTarget[columnIndex] = 0;
           encodedTarget.should.eql(data[i]);
