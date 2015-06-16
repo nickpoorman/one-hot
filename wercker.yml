@@ -1,4 +1,4 @@
-box: zhevron/iojs
+box: zhevron/iojs@1.1.0
 build:
   steps:
     - script:
