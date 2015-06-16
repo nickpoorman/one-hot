@@ -159,6 +159,64 @@ describe('one hot', function() {
       done();
     });
   });
+
+  it('should return true for the indexes that are one hot', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      oneHot.isEncodedIndexOneHot(0).should.be.eql(false);
+      oneHot.isEncodedIndexOneHot(1).should.be.eql(false);
+      oneHot.isEncodedIndexOneHot(2).should.be.eql(false);
+      oneHot.isEncodedIndexOneHot(3).should.be.eql(true);
+      done();
+    });
+  });
+
+  it('should return the feature value at the given index', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      oneHot.getFeatureValueFromEncodedIndex(3).should.be.eql('a'); // 'a'
+      oneHot.getFeatureValueFromEncodedIndex(4).should.be.eql('b');; // 'b'
+      done();
+    });
+  });
+
+  it('should build the correct column header', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var originalHeader = ['man', 'woman', 'child', 'letter'];
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      var columnHeader = oneHot.buildColumnHeader(originalHeader);
+      columnHeader.should.be.eql(['man', 'woman', 'child', 'letter:a', 'letter:b']);
+      done();
+    });
+  });
 });
 
 describe('one hot - streaming', function() {
