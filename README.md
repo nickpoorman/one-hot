@@ -4,7 +4,7 @@ One hot encode vectors using a streaming implementation.
 
 See Wikipedia [https://en.wikipedia.org/wiki/One-hot](https://en.wikipedia.org/wiki/One-hot).
 
-```
+``` javascript
 var OneHot = require('one-hot');
 ```
 
@@ -16,7 +16,7 @@ Instantiate a new instance of OneHot
 
 This method will return the new index (the hot index) of a given original index and it's feature value. For example:
 
-```
+``` javascript
 var oneHot = new OneHot()
 var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
@@ -52,13 +52,13 @@ This method will one hot encode each input vector in `data`. `data` must be an a
 
 See tests folder for more examples...
 
-```
+``` javascript
 var testIVs = [
   [0, 1, 2, 'a', 3],
   [3, 4, 5, 'b', 6],
   [6, 7, 8, 'c', 9]
 ];
-    
+
 var oneHot = new OneHot();
 oneHot.analyze(testIVs, function(err) {
   if (err) throw err;
