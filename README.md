@@ -34,7 +34,7 @@ This must be called with a single pass over all the data to determine how to one
 
 ### var writeStreamEncode = oneHot.encode()
 
-This method will one hot encode each input vector by via stream transform. Call this method after `oneHot.analyze()` has completed.
+This method will one hot encode each input vector via stream transform. Call this method after `oneHot.analyze()` has completed.
 
 ## Non-Streaming
 
