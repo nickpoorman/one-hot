@@ -1,6 +1,6 @@
 {
   "name": "one-hot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "One hot encode vectors using a streaming implementation",
   "main": "index.js",
   "scripts": {
