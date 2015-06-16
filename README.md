@@ -8,9 +8,13 @@ See Wikipedia [https://en.wikipedia.org/wiki/One-hot](https://en.wikipedia.org/w
 var OneHot = require('one-hot');
 ```
 
-## var oneHot = new OneHot()
+## var oneHot = new OneHot(opts)
 
-Instantiate a new instance of OneHot
+Instantiate a new instance of OneHot.
+
+`opts` is an optional object where:
+
+ * `opts.oneCold = true` will use `0` as the hot value and `1` as the cold value. default: false, ie. `1` is hot `0` is cold
 
 ### var index = getEncodedColumnIndex(originalIndex, featureValue)
 

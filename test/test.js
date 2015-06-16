@@ -255,3 +255,47 @@ describe('one hot - single duplicate feature, different original columns', funct
     });
   });
 });
+
+describe('one cold', function() {
+
+  it('should one cold encode the string features in the input vectors', function(done) {
+    var encodeColumnIndex = 3;
+
+    var testIVs = [
+      [0, 1, 2, 'a', 3],
+      [3, 4, 5, 'b', 6],
+      [6, 7, 8, 'c', 9]
+    ];
+
+    var encodedIVs = [
+      [0, 1, 2, 3, 1, 1, 1],
+      [3, 4, 5, 6, 1, 1, 1],
+      [6, 7, 8, 9, 1, 1, 1]
+    ];
+
+    var oneHot = new OneHot({
+      oneCold: true
+    });
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      oneHot.encode(testIVs, function(err, data) {
+        if (err) throw err;
+
+        var iv;
+        var columnIndex;
+        var encodedTarget;
+        for (var i = 0; i < testIVs.length; i++) {
+          iv = testIVs[i];
+          encodedTarget = _.clone(encodedIVs[i], true);
+          columnIndex = oneHot.getEncodedColumnIndex(encodeColumnIndex, iv[encodeColumnIndex]);
+          if (typeof columnIndex === 'undefined') throw new Error('could not get encoded column index');
+          encodedTarget[columnIndex] = 0;
+          encodedTarget.should.eql(data[i]);
+        }
+
+        done();
+      });
+    });
+  });
+});
