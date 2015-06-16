@@ -5,9 +5,10 @@ build:
   steps:
     # A step that executes `npm install` command
     - script:
-        name: echo nodejs information
+        name: install dev deps
         code: |
-          npm install
+          NODE_ENV=test npm install
+
     # A step that executes `npm test` command
     - npm-test
 
