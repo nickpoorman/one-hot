@@ -13,5 +13,6 @@ build:
     - script:
         name: echo nodejs information
         code: |
+          npm install
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
