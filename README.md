@@ -73,13 +73,58 @@ This method will one hot encode each input vector in `data`. `data` must be an a
 
 ## Methods
 
+#### var columnsHeader = oneHot.getColumnsHeader(originalColumns)
+
+This method will return an array of the column names. If `originalColumns` is provided, it will be used to fill in the column names. When `originalColumns` is `undefined`, the column names will be null and the one hot features will be `<original_column_number:feature_value>`. For example:
+
+``` javascript
+var oneHot = new OneHot()
+var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
+var originalColumns = ['one', 'two', 'three', 'char'];
+... // removed for brevity (see tests)
+oneHot.getColumnsHeader(originalColumns); // ['one', 'two', 'three', 'char:a', 'char:b']
+oneHot.getColumnsHeader(); // [null, null, null, '3:a', '3:b']
+```
+
+#### var numOriginal = oneHot.getNumberOfOriginalFeatures()
+
+This method will return the number of original features. For example:
+
+``` javascript
+var oneHot = new OneHot()
+var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
+... // removed for brevity (see tests)
+oneHot.getNumberOfOriginalFeatures(originalColumns); // 4 {1, 2, 3, 'a'}
+```
+
+#### var numEncoded = oneHot.getNumberOfEncodedFeatures()
+
+This method will return the number of original features. For example:
+
+``` javascript
+var oneHot = new OneHot()
+var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
+... // removed for brevity (see tests)
+oneHot.getNumberOfEncodedFeatures(originalColumns); // 5, 3 non one hot + 2 one hot {1, 2, 3, 'a', 'b'}
+```
+
+#### var numEncoded = oneHot.getNumberOfNonEncodedFeatures()
+
+This method will return the number of original features. For example:
+
+``` javascript
+var oneHot = new OneHot()
+var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
+... // removed for brevity (see tests)
+oneHot.getNumberOfNonEncodedFeatures(originalColumns); // 3, {1, 2, 3}
+```
+
 #### var encodedIndex = oneHot.getEncodedIndexFromOriginalIndex(originalIndex, featureValue)
 
 This method will return the new index (the hot index) of a given original index and it's feature value. You must specify a feature because of the one-to-many relationship between original and encoded. For example:
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 var encodedIndex = oneHot.getEncodedIndexFromOriginalIndex(3, 'a'); // encodedIndex could be 3 or 4, [1, 2, 3, 1, 0], or [1, 2, 3, 0, 1] depending on the order in which the ivs were processed
@@ -91,7 +136,6 @@ This method will return the original index (before encoding) of a given encoded 
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 var originalIndex = oneHot.getOriginalIndexFromEncodedIndex(4); // 3
@@ -103,7 +147,6 @@ This method will return the index used internally to one hot encode the `feature
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 var encodedIndexA = oneHot.getInternalIndexFromOriginalIndex(3, 'a'); // 4, ie, [1, 2, 3, <encoded column: {a, b}>, 1, 0]
@@ -116,7 +159,6 @@ This method will return the original index from the index used internally to one
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 var encodedIndexA = oneHot.getOriginalIndexFromInternalIndex(4); // 3, ie, [1, 2, 3, <encoded column: {a, b}>, 1, 0] => [1, 2, 3, 'a']
@@ -129,7 +171,6 @@ This method will return the encoded index from the index used internally to one 
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 var encodedIndexA = oneHot.getEncodedIndexFromInternalIndex(4); // 3, ie, [1, 2, 3, <encoded column: {a, b}>, 1, 0] => [1, 2, 3, 1, 0]
@@ -142,7 +183,6 @@ This method will return the the index used internally to one hot encode from the
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 var encodedIndexA = oneHot.getInternalIndexFromEncodedIndex(3); // 4, ie, [1, 2, 3, 1, 0] => [1, 2, 3, <encoded column: {a, b}>, 1, 0]
@@ -155,7 +195,6 @@ This method will return true if the encoded index given is a one hot index. For 
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 oneHot.isEncodedIndexOneHot(0); // false
@@ -164,13 +203,26 @@ oneHot.isEncodedIndexOneHot(2); // false
 oneHot.isEncodedIndexOneHot(3); // true
 ```
 
+#### var isOneHot = oneHot.isOriginalIndexOneHot(originalIndex)
+
+This method will return true if the original index given is a one hot index. For example:
+
+``` javascript
+var oneHot = new OneHot()
+var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
+... // removed for brevity (see tests)
+oneHot.isOriginalIndexOneHot(0); // false
+oneHot.isOriginalIndexOneHot(1); // false
+oneHot.isOriginalIndexOneHot(2); // false
+oneHot.isOriginalIndexOneHot(3); // true
+```
+
 #### var featureValue = oneHot.getFeatureValueFromEncodedIndex(encodedIndex)
 
 This method will return the feature value at a given encoded index. For example:
 
 ``` javascript
 var oneHot = new OneHot()
-var ws = oneHot.analyze()
 var originalIVs = [[1, 2, 3, 'a'], [1, 2, 3, 'b']]
 ... // removed for brevity (see tests)
 oneHot.getFeatureValueFromEncodedIndex(3); // 'a'
