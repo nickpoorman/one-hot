@@ -4,7 +4,9 @@ One hot encode vectors using a streaming implementation.
 
 [![wercker status](https://app.wercker.com/status/1b44d13a2f20cff87dfafebb0f544ffe/s "wercker status")](https://app.wercker.com/project/bykey/1b44d13a2f20cff87dfafebb0f544ffe)
 
-See Wikipedia [https://en.wikipedia.org/wiki/One-hot](https://en.wikipedia.org/wiki/One-hot).
+*Note: This was only tested using iojs and uses the [Simplified Constructor API](https://iojs.org/api/stream.html#stream_simplified_constructor_api)* 
+
+See Wikipedia [https://en.wikipedia.org/wiki/One-hot](https://en.wikipedia.org/wiki/One-hot)
 
 ``` javascript
 var OneHot = require('one-hot');
@@ -17,7 +19,7 @@ Instantiate a new instance of OneHot.
 
 `opts` is an optional object where:
 
- * `opts.oneCold = true` will use `0` as the hot value and `1` as the cold value. default: false, ie. `1` is hot `0` is cold
+ * `opts.oneCold = true` will use `0` as the hot value and `1` as the cold value. Default: `false`, ie. `1` is hot and `0` is cold.
 
 
 ## Example

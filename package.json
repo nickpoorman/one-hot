@@ -22,5 +22,8 @@
     "mocha": "^2.2.5",
     "should": "^6.0.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "iojs": ">=1.5.0"
+  }
 }
