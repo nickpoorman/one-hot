@@ -361,6 +361,8 @@ describe('one hot', function() {
       });
     });
   });
+
+  it('should ignore columns that were added to opts.ignoreOpts');
 });
 
 describe('one hot - streaming', function() {

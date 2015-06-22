@@ -20,6 +20,7 @@ Instantiate a new instance of OneHot.
 `opts` is an optional object where:
 
  * `opts.oneCold = true` will use `0` as the hot value and `1` as the cold value. Default: `false`, ie. `1` is hot and `0` is cold.
+ * `opts.ignoreColumns` is an optional array of columns to ignore (by index) when encoding the input vectors
 
 
 ## Example
@@ -68,9 +69,13 @@ These are the non-streaming methods.
 
 This must be called with a single pass over all the data to determine how to one hot encode the data. `data` must be an array of input vectors and `cb` must be a callback.
 
-##### oneHot.encode(data, cb)
+##### oneHot.encode(data, opts, cb)
 
 This method will one hot encode each input vector in `data`. `data` must be an array of input vectors and `cb` must be a callback with a signature of `(err, encodedData)` where `encodedData` will be all the one hot encoded data. Call this method after `oneHot.analyze()` has completed.
+
+`opts` is an optional object that may include:
+
+ * `opts.ignoreColumns` - an optional array of columns to ignore (by index) when encoding the input vectors. This will override `opts.ignoreColumns` from the `OneHot` instantiation.
 
 
 ## Methods
