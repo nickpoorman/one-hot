@@ -362,7 +362,59 @@ describe('one hot', function() {
     });
   });
 
-  it('should ignore columns that were added to opts.ignoreOpts');
+  it('should ignore columns that were added to opts.ignoreColumns at OneHot instantiation', function(done) {
+
+    var ignoreColumn = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var opts = {
+      ignoreColumns: [ignoreColumn]
+    };
+
+    var oneHot = new OneHot(opts);
+    oneHot.analyze(testIVs, function(err) {
+      if (err) throw err;
+
+      oneHot.encode(testIVs, function(err, data) {
+        if (err) throw err;
+
+        data[0][ignoreColumn].should.be.eql('a');
+        data[1][ignoreColumn].should.be.eql('b');
+        done();
+      });
+    });
+  });
+
+  it('should ignore columns that were added to opts.ignoreColumns at oneHot.analyze()', function(done) {
+
+    var ignoreColumn = 3;
+
+    var testIVs = [
+      [1, 2, 3, 'a'],
+      [1, 2, 3, 'b']
+    ];
+
+    var opts = {
+      ignoreColumns: [ignoreColumn]
+    };
+
+    var oneHot = new OneHot();
+    oneHot.analyze(testIVs, opts, function(err) {
+      if (err) throw err;
+
+      oneHot.encode(testIVs, function(err, data) {
+        if (err) throw err;
+
+        data[0][ignoreColumn].should.be.eql('a');
+        data[1][ignoreColumn].should.be.eql('b');
+        done();
+      });
+    });
+  });
 });
 
 describe('one hot - streaming', function() {
